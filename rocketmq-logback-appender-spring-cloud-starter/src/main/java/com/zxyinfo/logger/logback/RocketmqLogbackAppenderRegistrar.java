@@ -33,6 +33,7 @@ public class RocketmqLogbackAppenderRegistrar implements ImportBeanDefinitionReg
     final String tag = attributes.getString("tag");
     final String topic = attributes.getString("topic");
     final String pattern = attributes.getString("pattern");
+    final boolean includeCallerData = attributes.getBoolean("includeCallerData");
     Assert.hasText(nameServerAddress,"@EnableRocketmqLogbackAppender的nameServerAddress不能为空");
     Assert.hasText(producerGroup,"@EnableRocketmqLogbackAppender的producerGroup不能为空");
     final AbstractBeanDefinition definition = BeanDefinitionBuilder.genericBeanDefinition(
@@ -42,6 +43,7 @@ public class RocketmqLogbackAppenderRegistrar implements ImportBeanDefinitionReg
         .addConstructorArgValue(tag)
         .addConstructorArgValue(topic)
         .addConstructorArgValue(pattern)
+        .addConstructorArgValue(includeCallerData)
         .setInitMethodName("refresh")
         .getBeanDefinition();
     registry.registerBeanDefinition("rocketmqLoggerAppenderRefresher",definition);

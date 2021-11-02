@@ -42,4 +42,6 @@ public @interface EnableRocketmqLogbackAppender {
   String pattern() default "{\"date\":\"%d\",\"level\":\"%level\",\"logger\":\"%logger{40}\","
       + "\"thread\":\"%t\",\"location\":\"%line\",\"message\":\"%message\",\"ip\":\"%ip\","
       + "\"stack_trace\":\"%rootException{10}\",\"token\":\"%mdc{kb.userToken}\"}";
+
+  boolean includeCallerData() default false;
 }

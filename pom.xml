@@ -3,11 +3,14 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
+<parent>
   <groupId>com.zxyinfo</groupId>
+  <artifactId>dependencies-parent</artifactId>
+  <version>1.0.0</version>
+</parent>
   <artifactId>rocketmq-appender-spring-cloud-starter</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <modules>
     <module>rocketmq-logback-appender-spring-cloud-starter</module>
   </modules>
@@ -74,34 +77,4 @@
       </build>
     </profile>
   </profiles>
-  <distributionManagement>
-    <!-- 这里的ID一定要在maven setting文件中存在于server下的ID -->
-    <snapshotRepository>
-      <id>snapshots</id>
-      <name>Local Nexus Snapshot Repository</name>
-      <url>http://mirror.cq-p.com.cn:8081/repository/maven-group/</url>
-    </snapshotRepository>
-    <repository>
-      <id>releases</id>
-      <name>Local Nexus Release Repository</name>
-      <url>http://mirror.cq-p.com.cn:8081/repository/maven-group/</url>
-    </repository>
-  </distributionManagement>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>${maven-source-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>

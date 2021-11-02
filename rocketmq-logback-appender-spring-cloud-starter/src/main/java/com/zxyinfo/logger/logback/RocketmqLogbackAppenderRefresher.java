@@ -32,16 +32,18 @@ public class RocketmqLogbackAppenderRefresher implements EnvironmentAware {
   final String tag;
   final String topic;
   final String pattern;
+  final boolean includeCallerData;
   private Environment environment;
   public static final String APPENDER_NAME = "mqAsyncAppender";
 
   public RocketmqLogbackAppenderRefresher(String nameServerAddress, String producerGroup,
-      String tag, String topic, String pattern) {
+      String tag, String topic, String pattern, boolean includeCallerData) {
     this.nameServerAddress = nameServerAddress;
     this.producerGroup = producerGroup;
     this.tag = tag;
     this.topic = topic;
     this.pattern = pattern;
+    this.includeCallerData = includeCallerData;
   }
 
   @EventListener
@@ -81,6 +83,8 @@ public class RocketmqLogbackAppenderRefresher implements EnvironmentAware {
       mqAsyncAppender.setMaxFlushTime(2000);
       mqAsyncAppender.setNeverBlock(true);
       mqAsyncAppender.setContext(lc);
+      //默认asyncAppender不带堆栈信息，此处设置为true，但会降低性能
+      mqAsyncAppender.setIncludeCallerData(true);
       mqAsyncAppender.setName(APPENDER_NAME);
       mqAsyncAppender.addAppender(mqAppender);
       rootLogger.addAppender(mqAsyncAppender);
