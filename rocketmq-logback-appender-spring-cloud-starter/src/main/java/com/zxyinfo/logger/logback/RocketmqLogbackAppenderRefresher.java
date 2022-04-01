@@ -35,15 +35,17 @@ public class RocketmqLogbackAppenderRefresher implements EnvironmentAware {
   final boolean includeCallerData;
   private Environment environment;
   public static final String APPENDER_NAME = "mqAsyncAppender";
+  private final DynamicLogbackFilter filter;
 
   public RocketmqLogbackAppenderRefresher(String nameServerAddress, String producerGroup,
-      String tag, String topic, String pattern, boolean includeCallerData) {
+      String tag, String topic, String pattern, boolean includeCallerData,DynamicLogbackFilter filter) {
     this.nameServerAddress = nameServerAddress;
     this.producerGroup = producerGroup;
     this.tag = tag;
     this.topic = topic;
     this.pattern = pattern;
     this.includeCallerData = includeCallerData;
+    this.filter = filter;
   }
 
   @EventListener
@@ -74,7 +76,6 @@ public class RocketmqLogbackAppenderRefresher implements EnvironmentAware {
       layout.setPattern(resolve(pattern));
       mqAppender.setLayout(layout);
       mqAppender.setName("mqAppender");
-      final DynamicLogbackFilter filter = new DynamicLogbackFilter();
       mqAppender.addFilter(filter);
       mqAppender.setContext(lc);
       AsyncAppender mqAsyncAppender = new AsyncAppender();

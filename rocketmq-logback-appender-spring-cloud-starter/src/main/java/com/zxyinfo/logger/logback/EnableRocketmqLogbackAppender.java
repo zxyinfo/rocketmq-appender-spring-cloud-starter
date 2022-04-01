@@ -17,26 +17,20 @@ import org.springframework.context.annotation.Import;
 @Documented
 @Import({RocketmqLogbackAppenderRegistrar.class})
 public @interface EnableRocketmqLogbackAppender {
+
   String nameServerAddress() default "";
+
   String topic() default "alert_topic";
+
   String tag() default "";
 
   String producerGroup() default "";
 
   /**
-   * 日志格式，默认 json格式
-   * eg:
-   * {
-   *                 "date":"%d",
-   *                 "level": "%level",
-   *                 "logger": "%logger{40}",
-   *                 "thread": "%t",
-   *                 "location": "%L",
-   *                 "message": "%message",
-   *                 "ip":"%ip",
-   *                 "stack_trace": "%rootException",
-   *                 "token":"%mdc{kb.userToken}"
-   *                 }
+   * 日志格式，默认 json格式 eg: { "date":"%d", "level": "%level", "logger": "%logger{40}", "thread": "%t",
+   * "location": "%L", "message": "%message", "ip":"%ip", "stack_trace": "%rootException",
+   * "token":"%mdc{kb.userToken}" }
+   *
    * @return 日志格式
    */
   String pattern() default "{\"date\":\"%d\",\"level\":\"%level\",\"logger\":\"%logger{40}\","
@@ -44,4 +38,7 @@ public @interface EnableRocketmqLogbackAppender {
       + "\"stack_trace\":\"%rootException{10}\",\"token\":\"%mdc{kb.userToken}\"}";
 
   boolean includeCallerData() default false;
+
+  boolean enableDeadLetterAlert() default true;
+
 }

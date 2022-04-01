@@ -10,7 +10,7 @@
 </parent>
   <artifactId>rocketmq-appender-spring-cloud-starter</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <modules>
     <module>rocketmq-logback-appender-spring-cloud-starter</module>
   </modules>

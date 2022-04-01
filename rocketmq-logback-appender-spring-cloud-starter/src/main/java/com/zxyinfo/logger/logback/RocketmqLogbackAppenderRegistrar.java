@@ -1,7 +1,12 @@
 package com.zxyinfo.logger.logback;
 
 import com.zxyinfo.logger.logback.support.DefaultLoggerConfigServiceImpl;
+import com.zxyinfo.logger.logback.support.DynamicLogbackFilter;
+import com.zxyinfo.logger.logback.support.RocketMQListenerAdvice;
+import com.zxyinfo.logger.logback.support.RocketMQListenerPostProcessor;
 import com.zxyinfo.logger.logback.util.BeanFactoryUtils;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -44,14 +49,27 @@ public class RocketmqLogbackAppenderRegistrar implements ImportBeanDefinitionReg
         .addConstructorArgValue(topic)
         .addConstructorArgValue(pattern)
         .addConstructorArgValue(includeCallerData)
+        .addConstructorArgReference("dynamicLogbackFilter")
         .setInitMethodName("refresh")
         .getBeanDefinition();
     registry.registerBeanDefinition("rocketmqLoggerAppenderRefresher",definition);
     final AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(
         BeanFactoryUtils.class).getBeanDefinition();
     registry.registerBeanDefinition("beanFactoryUtils",beanDefinition);
+    //注册loggerConfigService
     registry.registerBeanDefinition("loggerConfigService",
         BeanDefinitionBuilder.genericBeanDefinition(DefaultLoggerConfigServiceImpl.class).getBeanDefinition());
-
+    //注册dynamicLogbackFilter
+    final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(
+            DynamicLogbackFilter.class).addConstructorArgReference("loggerConfigService");
+    final boolean enableDeadLetterAlert = attributes.getBoolean("enableDeadLetterAlert");
+    if(enableDeadLetterAlert){
+      final AbstractBeanDefinition processor = BeanDefinitionBuilder.genericBeanDefinition(
+          RocketMQListenerPostProcessor.class).getBeanDefinition();
+      registry.registerBeanDefinition("rocketMQListenerPostProcessor",processor);
+      final String name = RocketMQListenerAdvice.class.getName();
+      builder.addPropertyValue("acceptSet", Stream.of(name).collect(Collectors.toSet()));
+    }
+    registry.registerBeanDefinition("dynamicLogbackFilter", builder.getBeanDefinition());
   }
 }
